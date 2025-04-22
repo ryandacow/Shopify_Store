@@ -1,40 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🧸 Personalized Toy & Book Recommender
 
-## Getting Started
+A simple, parent-friendly web app that helps match children to toys and books based on their unique personality traits.  
+Powered by a custom-trained OCEAN personality detection model and a clean, responsive Next.js frontend.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🧠 **OCEAN Trait Analyzer** – Accepts child behavior input and determines their dominant personality trait
+- 🎁 **Gift Suggestions** – Provides tailored toy/book recommendations based on the trait
+- 💻 **Minimalist UI** – Soft color scheme and layout designed to appeal to parents
+- 🚀 **Deployed with Render + Vercel** – Fast API and frontend hosting on free plans
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## 🧠 How It Works
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+1. Parents describe their child in a few sentences (e.g., "My child is curious and loves building things.")
+2. The backend Flask API analyzes the text and predicts their personality traits (OCEAN model)
+3. The site displays the **dominant trait**, an interpretation, and gift suggestions
+4. Future: Traits will be used to filter actual Shopify products
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+| Layer       | Tech                           |
+|------------|----------------------------------|
+| Frontend    | Next.js, Tailwind CSS           |
+| Backend     | Flask (hosted on Render)        |
+| Model       | Logistic Regression (TF-IDF, OCEAN traits) |
+| Hosting     | Vercel (frontend), Render (API) |
+| Tools       | GitHub, VS Code, Heroicons      |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
