@@ -16,7 +16,7 @@ export default function Home() {
 
       <main>
         <section
-          className="px-4 flex items-center justify-center min-h-screen"
+          className="min-h-screen px-4 flex items-center justify-center"
         >
           <div className="max-w-3xl text-center">
             <h1 className="text-3xl sm:text-5xl font-bold text-stone-800 mb-6 leading-snug">
@@ -94,10 +94,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="min-h-screen items-center justify-center flex bg-white py-16 px-6">
+        <section className="min-h-[70vh] py-20 justify-center flex bg-white px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center text-stone-800 mb-10">Why Shop with KidsTreasures?</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 text-center text-sm text-stone-700">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-left text-sm text-stone-700">
               <div className="p-4 border rounded-lg shadow-sm">✅ Market-Beating Prices</div>
               <div className="p-4 border rounded-lg shadow-sm">🛡️ Quality-Assured</div>
               <div className="p-4 border rounded-lg shadow-sm">🔐 Secure Payments</div>

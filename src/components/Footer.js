@@ -6,7 +6,7 @@ import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="text-stone-700 border-t border-stone-300 mt-16">
+    <footer className="text-stone-700 border-t border-stone-300">
       <div className="max-w-7xl mx-auto px-6 pl-10 py-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
         {/* Shop Links */}
         <div>
@@ -62,7 +62,7 @@ export default function Footer() {
         </div>
       </div>
       <div className = 'flex justify-center py-6 text-sm text-stone-500'>
-          © {new Date().getFullYear()} KidsTreasures. All rights reserved.
+          © {new Date().getFullYear()} TheAmazingStore. All rights reserved.
       </div>
     </footer>
   );

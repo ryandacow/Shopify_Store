@@ -63,7 +63,7 @@ export default function PersonalityInput() {
 
       <Header />
 
-      <main className="min-h-screen pt-24 px-4 flex flex-col items-center justify-start">
+      <main className="pt-20 md:pt-30 min-h-screen px-4 bg-[#f6ede6] flex flex-col items-center justify-start">
         <div className="w-full max-w-2xl text-center">
           <h1 className="text-3xl font-bold mb-6 text-stone-800">Describe Your Child</h1>
 
