@@ -44,7 +44,7 @@ export default function Home() {
             </h2>
 
             <p className="text-center text-stone-600 mb-10">
-              Shop handpicked <span className="font-medium text-stone-900">toys</span> and <span className="font-medium text-stone-900">books</span> selected to match your child's needs, interests, and personality.
+              Shop handpicked <span className="font-medium text-stone-900">toys</span> and <span className="font-medium text-stone-900">books</span> selected to match your child&rsquo;s needs, interests, and personality.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
