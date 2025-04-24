@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { fetchOceanTraits } from '../lib/fetchOceanTraits';
+import { useRouter } from 'next/router';
 
 const traitInfo = {
   Openness: {
@@ -35,6 +37,7 @@ export default function PersonalityInput() {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -44,6 +47,7 @@ export default function PersonalityInput() {
       const data = await fetchOceanTraits(inputText);
       const topTrait = data.predicted_traits?.[0];
       setResult(traitInfo[topTrait]);
+
     } catch (error) {
       console.error('Error analyzing text:', error);
     }
@@ -59,7 +63,7 @@ export default function PersonalityInput() {
 
       <Header />
 
-      <main className="min-h-screen bg-[#f6ede6] pt-24 px-4 flex flex-col items-center justify-start">
+      <main className="min-h-screen pt-24 px-4 flex flex-col items-center justify-start">
         <div className="w-full max-w-2xl text-center">
           <h1 className="text-3xl font-bold mb-6 text-stone-800">Describe Your Child</h1>
 
@@ -69,6 +73,12 @@ export default function PersonalityInput() {
             placeholder="E.g., My child is creative, loves asking questions, and enjoys building new things..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !loading && inputText.trim()) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
           />
 
           <button
@@ -79,23 +89,39 @@ export default function PersonalityInput() {
             {loading ? 'Analyzing Personality...' : 'Show Insights'}
           </button>
 
-          {/* Loader */}
           {loading && (
             <div className="mt-6 text-stone-600 text-sm">
               Warming up... this may take a few seconds on first run.
             </div>
           )}
 
-          {/* Trait Result */}
           {result && (
             <div className="mt-12 bg-white rounded-xl shadow-md p-6 text-left text-stone-800">
               <h2 className="text-xl font-semibold mb-2">Dominant Trait: {result.label}</h2>
               <p className="mb-2"><span className="font-medium">Interpretation:</span> {result.interpretation}</p>
               <p><span className="font-medium">Gift Ideas:</span> {result.suggestions}</p>
+
+              <p className="text-center text-stone-600 mt-6 italic">
+                Based on what you shared, we’ve picked out items that match your child’s personality.
+              </p>
+              <p className="text-center text-stone-700 font-medium">
+                Explore handpicked toys and books tailored just for them 🎁
+              </p>
+
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={() => router.push(`/shop?trait=${encodeURIComponent(result.label)}`)}
+                  className="bg-stone-800 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition"
+                >
+                  Continue to Shop
+                </button>
+              </div>
             </div>
           )}
         </div>
       </main>
+
+      <Footer />
     </>
   );
 }
