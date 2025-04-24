@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <Head>
         <title>KidsTreasures – Thoughtful Toys & Books</title>
-        <meta name="description" content="Discover toys and books that match your child’s personality and spark their imagination." />
+        <meta name="description" content="Discover toys and books that match your child&rsquo;s personality and spark their imagination." />
       </Head>
 
       <Header />
@@ -20,11 +20,11 @@ export default function Home() {
         >
           <div className="max-w-3xl text-center">
             <h1 className="text-3xl sm:text-5xl font-bold text-stone-800 mb-6 leading-snug">
-              Discover the Perfect Gift<br />for Your Child’s Personality
+              Discover the Perfect Gift<br />for Your Child&rsquo;s Personality
             </h1>
 
             <p className="text-sm sm:text-lg text-stone-600 mb-10">
-              Tell us about your child — we’ll match them with toys and books that truly fit who they are.
+              Tell us about your child — we&rsquo;ll match them with toys and books that truly fit who they are.
             </p>
 
             <Link
