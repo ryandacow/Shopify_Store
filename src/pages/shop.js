@@ -21,14 +21,14 @@ export default function Shop() {
   return (
     <>
       <Head>
-        <title>Shop – KidsTreasures</title>
+        <title>Shop – AmazingStoreSG</title>
       </Head>
       <Header />
 
-      <main className="pt-28 min-h-screen px-4 pb-16 bg-[#f6ede6]">
+      <main className="pt-20 sm:pt-30 min-h-screen px-4 md:px-8 pb-16 bg-[#f6ede6]">
         <div className="max-w-6xl mx-auto">
           {/* Page Title */}
-          <h1 className="text-3xl font-bold text-stone-800 mb-8 text-center">
+          <h1 className="text-xl sm:text-3xl font-bold text-stone-800 mb-8 text-center">
             {trait ? `Recommended for ${trait}` : 'Shop All Products'}
           </h1>
 
@@ -77,7 +77,7 @@ export default function Shop() {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

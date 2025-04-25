@@ -62,7 +62,7 @@ export default function Footer() {
         </div>
       </div>
       <div className = 'flex justify-center py-6 text-sm text-stone-500'>
-          © {new Date().getFullYear()} TheAmazingStore. All rights reserved.
+          © {new Date().getFullYear()} AmazingStoreSG. All rights reserved.
       </div>
     </footer>
   );

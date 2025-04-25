@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>KidsTreasures – Thoughtful Toys & Books</title>
+        <title>AmazingStoreSG</title>
         <meta name="description" content="Discover toys and books that match your child&rsquo;s personality and spark their imagination." />
       </Head>
 

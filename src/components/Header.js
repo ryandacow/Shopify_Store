@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { MagnifyingGlassIcon, UserIcon, ShoppingCartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, UserIcon, ShoppingCartIcon, HeartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Header() {
             height={40}
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
           />
-          <span className="hidden sm:inline text-xs sm:text-sm font-medium text-stone-800">TheAmazingStore</span>
+          <span className="hidden sm:inline text-xs sm:text-sm font-medium text-stone-800">AmazingStoreSG</span>
         </div>
 
         {/* Center: Navigation */}
@@ -78,12 +78,15 @@ export default function Header() {
           <button className="hover:text-stone-900">
             <UserIcon className="w-5 h-5" />
           </button>
-          <button className="hover:text-stone-900 relative">
+          <button className="hover:text-stone-900">
+            <HeartIcon className="w-5 h-5" />
+          </button>
+          <Link href='/cart' className="hover:text-stone-900 relative">
             <ShoppingCartIcon className="w-5 h-5" />
             <span className="absolute -top-2 -right-2 bg-stone-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
               0
             </span>
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu */}
