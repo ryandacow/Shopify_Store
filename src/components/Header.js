@@ -2,10 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useCart } from '../context/CartContext'; // ✅ Import Cart Context
 import { MagnifyingGlassIcon, UserIcon, ShoppingCartIcon, HeartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const router = useRouter();
+  const { cartItems } = useCart(); // ✅ Get cart items
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0); // ✅ Calculate total quantity
 
   const isActive = (path) => router.pathname === path;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -13,17 +16,21 @@ export default function Header() {
   return (
     <header className="absolute top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        
         {/* Left: Logo + Site Name */}
-        <div className="flex flex-col items-center space-y-1">
+        <Link href="/" className="flex flex-col items-center space-y-1">
           <Image
             src="/favicon.ico"
             alt="KidsTreasures Logo"
+            href='/'
             width={40}
             height={40}
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
           />
-          <span className="hidden sm:inline text-xs sm:text-sm font-medium text-stone-800">AmazingStoreSG</span>
-        </div>
+          <span className="hidden sm:inline text-xs sm:text-sm font-medium text-stone-800">
+            AmazingStoreSG
+          </span>
+        </Link>
 
         {/* Center: Navigation */}
         <nav className="hidden md:flex space-x-10 text-sm font-medium text-stone-700">
@@ -38,20 +45,20 @@ export default function Header() {
               key={href}
               href={href}
               className={`relative py-2
-                  ${isActive(href) ? 'text-stone-900' : 'text-stone-700'}
-                  hover:text-stone-900 transition-colors duration-200
-                  after:content-['']
-                  after:absolute
-                  after:w-full
-                  after:h-0.5
-                  after:bg-stone-900
-                  after:left-0
-                  after:bottom-0
-                  after:transition-transform
-                  after:duration-300
-                  ${isActive(href) ? 'after:scale-x-100' : 'after:scale-x-0'}
-                  hover:after:scale-x-100
-                  after:origin-left`}
+                ${isActive(href) ? 'text-stone-900' : 'text-stone-700'}
+                hover:text-stone-900 transition-colors duration-200
+                after:content-['']
+                after:absolute
+                after:w-full
+                after:h-0.5
+                after:bg-stone-900
+                after:left-0
+                after:bottom-0
+                after:transition-transform
+                after:duration-300
+                ${isActive(href) ? 'after:scale-x-100' : 'after:scale-x-0'}
+                hover:after:scale-x-100
+                after:origin-left`}
             >
               {label}
             </Link>
@@ -60,7 +67,7 @@ export default function Header() {
 
         {/* Right: Icons */}
         <div className="flex items-center space-x-6 text-stone-700">
-          {/* Mobile Menu Button*/}
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden hover:text-stone-900"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -81,11 +88,15 @@ export default function Header() {
           <button className="hover:text-stone-900">
             <HeartIcon className="w-5 h-5" />
           </button>
-          <Link href='/cart' className="hover:text-stone-900 relative">
+
+          {/* Cart Icon */}
+          <Link href="/cart" className="hover:text-stone-900 relative">
             <ShoppingCartIcon className="w-5 h-5" />
-            <span className="absolute -top-2 -right-2 bg-stone-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-              0
-            </span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-stone-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
 
