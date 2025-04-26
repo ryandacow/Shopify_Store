@@ -1,11 +1,23 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
-  // ✅ Add to cart (increment quantity if already exists)
+  // 🛒 Load cart from localStorage on first mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // 🛒 Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
   const addToCart = (product) => {
     setCartItems((prev) => {
       const existing = prev.find(item => item.id === product.id);
@@ -21,16 +33,13 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ✅ Remove one quantity from cart, or remove item if quantity = 1
   const removeFromCart = (productId) => {
     setCartItems((prev) => {
       const item = prev.find(i => i.id === productId);
       if (!item) return prev;
-
       if (item.quantity === 1) {
         return prev.filter(i => i.id !== productId);
       }
-
       return prev.map(i =>
         i.id === productId
           ? { ...i, quantity: i.quantity - 1 }
@@ -39,9 +48,13 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ✅ Optional: Clear item entirely
   const removeItemCompletely = (productId) => {
     setCartItems(prev => prev.filter(item => item.id !== productId));
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cart');
   };
 
   return (
@@ -49,7 +62,8 @@ export function CartProvider({ children }) {
       cartItems,
       addToCart,
       removeFromCart,
-      removeItemCompletely
+      removeItemCompletely,
+      clearCart,
     }}>
       {children}
     </CartContext.Provider>

@@ -3,15 +3,36 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
+import { useState } from 'react';
+import { MdDelete } from "react-icons/md";
 
 export default function CartPage() {
-  const { cartItems, addToCart, removeFromCart } = useCart();
+  const { cartItems, addToCart, removeFromCart, removeItemCompletely, clearCart } = useCart();
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState(''); // 'remove' or 'clear'
+  const [selectedItemId, setSelectedItemId] = useState(null);
 
   const calculateTotal = () =>
     cartItems.reduce((sum, item) => {
       const price = parseFloat(item.price.replace('$', '')) || 0;
       return sum + price * item.quantity;
     }, 0).toFixed(2);
+
+  const openModal = (type, id = null) => {
+    setModalType(type);
+    setSelectedItemId(id);
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
+    if (modalType === 'remove' && selectedItemId) {
+      removeItemCompletely(selectedItemId);
+    }
+    if (modalType === 'clear') {
+      clearCart();
+    }
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -25,7 +46,7 @@ export default function CartPage() {
           <h1 className="text-3xl text-stone-600 font-bold mb-6">Your Cart</h1>
 
           {cartItems.length === 0 ? (
-            <p className='text-stone-600'>Your cart is empty.</p>
+            <p className="text-stone-600">Your cart is empty.</p>
           ) : (
             <>
               <ul className="space-y-6">
@@ -65,23 +86,76 @@ export default function CartPage() {
                           +
                         </button>
                       </div>
+
+                      {/* Remove Product Completely */}
+                      <button
+                        onClick={() => openModal('remove', item.id)}
+                        className="text-xs hover:underline"
+                      >
+                        <MdDelete className="w-5 h-5 text-red-600 hover:text-red-500" />
+                      </button>
                     </div>
                   </li>
                 ))}
               </ul>
 
-              {/* Total and Checkout */}
-              <div className="mt-10 text-right">
-                <p className="text-lg font-medium text-stone-800 mb-4">
+              {/* Total and Actions */}
+              <div className="mt-10 text-right space-y-4">
+                <p className="text-lg font-medium text-stone-800">
                   Total: ${calculateTotal()}
                 </p>
-                <button className="bg-stone-800 text-white px-6 py-3 rounded hover:bg-stone-700 transition">
-                  Proceed to Checkout
-                </button>
+                <div className="flex flex-col sm:flex-row justify-end gap-4">
+                  <button
+                    onClick={() => openModal('clear')}
+                    className="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-500 transition"
+                  >
+                    Clear Cart
+                  </button>
+                  <button className="bg-stone-800 text-white px-6 py-3 rounded hover:bg-stone-700 transition">
+                    Proceed to Checkout
+                  </button>
+                </div>
               </div>
             </>
           )}
         </div>
+
+        {/* Confirmation Modal */}
+        {showModal && (
+          <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-md shadow-lg p-6 w-80 text-center space-y-4">
+              <p className="text-lg font-semibold text-stone-700">
+                {modalType === 'remove' ? (
+                  <>
+                    Warning:<br />
+                    This action cannot be undone. <br/>
+                    Remove this item from your cart?
+                  </>
+                ) : (
+                  <>
+                    Warning:<br />
+                    This action cannot be undone. <br/>
+                    Clear all items from your cart?
+                  </>
+                )}
+              </p>
+              <div className="flex justify-center gap-4 mt-4">
+                <button
+                  onClick={handleConfirm}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="border border-stone-400 text-stone-600 px-4 py-2 rounded hover:bg-stone-100"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       <Footer />

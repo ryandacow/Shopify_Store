@@ -11,10 +11,6 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="relative bg-white rounded-lg shadow-sm hover:shadow-md transition p-3 sm:p-4 flex flex-col">
-      {/* Heart Icon */}
-      <button className="absolute top-3 right-3 z-10 text-black hover:text-red-500 transition">
-        <HeartIcon className="w-5 h-5" />
-      </button>
 
       <Link href={`/product/${product.id}`}>
         <div className="relative w-full aspect-[4/3] mb-2 sm:mb-3">
@@ -36,8 +32,13 @@ const ProductCard = ({ product }) => {
         </Link>
 
         <div className="mt-3">
-          <p className="font-medium text-stone-900">{product.price}</p>
-
+          <div className='flex'>
+            <p className="font-medium text-stone-900">{product.price}</p>
+            {/* Heart Icon */}
+            <button className="text-black hover:text-red-500 transition absolute right-3">
+              <HeartIcon className="w-5 h-5" />
+            </button>
+          </div>
           {/* Quantity Controls */}
           {quantityInCart > 0 ? (
             <div className="flex items-center gap-2 mt-2">
