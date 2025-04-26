@@ -13,35 +13,43 @@ export default function Shop() {
   const { trait } = query;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  const [selectedTypes, setSelectedTypes] = useState([]); // Toy / Book
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedTraits, setSelectedTraits] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 50]);
+  const [ageRange, setAgeRange] = useState([0, 16]); // Assuming ages 0-10
+
+  const [filterSections, setFilterSections] = useState({
+    type: false,
+    trait: false,
+    brand: false,
+    category: false,
+    age: false,
+    price: false,
+  });
+
+  const toggleSection = (section) => {
+    setFilterSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   const [appliedFilters, setAppliedFilters] = useState({
+    types: [],
     categories: [],
     traits: [],
+    brands: [],
     priceRange: [0, 50],
+    ageRange: [0, 16],
   });
 
   // Toggle helpers
-  const toggleCategory = (cat) => {
-    setSelectedCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+  const toggleSelected = (stateSetter, value) => {
+    stateSetter((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
     );
-  };
-
-  const toggleTrait = (trait) => {
-    setSelectedTraits((prev) =>
-      prev.includes(trait) ? prev.filter((t) => t !== trait) : [...prev, trait]
-    );
-  };
-
-  const handlePriceChange = (index, value) => {
-    const newRange = [...priceRange];
-    newRange[index] = parseFloat(value);
-    if (newRange[0] <= newRange[1]) {
-      setPriceRange(newRange);
-    }
   };
 
   const resetFilters = () => {
@@ -52,26 +60,46 @@ export default function Shop() {
 
   const applyFilters = () => {
     setAppliedFilters({
+      types: selectedTypes,
       categories: selectedCategories,
       traits: selectedTraits,
+      brands: selectedBrands,
       priceRange: priceRange,
+      ageRange: ageRange,
     });
+    setCurrentPage(1);
     setIsFilterOpen(false);
   };
 
   const filtered = mockProducts.filter((product) => {
+    const productTags = product.tags;
+  
+    const matchesType =
+      !appliedFilters.types || appliedFilters.types.length === 0 ||
+      appliedFilters.types.some((type) => productTags.includes(type));
+  
     const matchesCategory =
-      appliedFilters.categories.length === 0 ||
-      appliedFilters.categories.some((cat) => product.tags.includes(cat));
+      !appliedFilters.categories || appliedFilters.categories.length === 0 ||
+      appliedFilters.categories.some((cat) => productTags.includes(`category_${cat}`));
+  
     const matchesTrait =
-      appliedFilters.traits.length === 0 ||
-      appliedFilters.traits.some((trait) => product.tags.includes(trait));
-    const productPrice = parseFloat(product.price.replace('$', ''));
+      !appliedFilters.traits || appliedFilters.traits.length === 0 ||
+      appliedFilters.traits.some((trait) => productTags.includes(`trait_${trait}`));
+  
+    const matchesBrand =
+      !appliedFilters.brands || appliedFilters.brands.length === 0 ||
+      appliedFilters.brands.some((brand) => productTags.includes(`brand_${brand}`));
+  
     const matchesPrice =
-      productPrice >= appliedFilters.priceRange[0] &&
-      productPrice <= appliedFilters.priceRange[1];
-
-    return matchesCategory && matchesTrait && matchesPrice;
+      parseFloat(product.price.replace('$', '')) >= (appliedFilters.priceRange?.[0] ?? 0) &&
+      parseFloat(product.price.replace('$', '')) <= (appliedFilters.priceRange?.[1] ?? 50);
+  
+    const ageTag = productTags.find(tag => tag.startsWith('ageGroup_'));
+    const productAge = ageTag ? parseInt(ageTag.split('_')[1].split('-')[0]) : null;
+    const matchesAge =
+      !productAge || (productAge >= (appliedFilters.ageRange?.[0] ?? 0) && productAge <= (appliedFilters.ageRange?.[1] ?? 16));
+  
+    return matchesType && matchesCategory && matchesTrait && matchesBrand && matchesPrice && matchesAge;
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,15 +153,19 @@ export default function Shop() {
       <main className="pt-20 sm:pt-28 min-h-screen px-4 md:px-8 pb-16">
         <div className="max-w-6xl mx-auto relative">
           {/* Title */}
-          <h1 className="text-xl sm:text-3xl font-bold text-stone-800 mb-8 text-center">
-            {trait ? `Recommended for ${trait}` : 'Shop All Products'}
-          </h1>
+          <div className="mb-8 text-center">
+            <h1 className="text-xl sm:text-3xl font-bold text-stone-800">
+              {appliedFilters.categories.length > 0
+                ? appliedFilters.categories.join(', ')
+                : 'All Products'}
+            </h1>
+          </div>
 
           {/* Top Controls */}
           <div className="relative flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
             {/* Left: Category Path */}
             <div className="text-stone-700 text-sm font-medium">
-              {trait ? `Category: Toys > ${trait}` : 'All Products'}
+              All Products {appliedFilters.categories.length > 0 && ` > ${appliedFilters.categories.join(' > ')}`}
             </div>
 
             {/* Right: Filter + Sort */}
@@ -189,74 +221,187 @@ export default function Shop() {
           {/* Filter Panel */}
           <div className={`absolute left-0 right-0 bg-white border-t border-b border-stone-300 transition-all duration-300 z-30 ${isFilterOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"} origin-top`}>
             <div className="max-w-6xl mx-auto px-4 md:px-8 bg-white shadow-md py-6">
-              <div className="flex flex-col md:flex-row gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
 
-                {/* Category */}
-                <div className="flex-1">
-                  <h3 className="font-semibold text-stone-700 mb-3">Category</h3>
-                  <div className="flex flex-col gap-2 text-sm text-stone-600">
-                    {['Toys', 'Books', 'Games'].map((cat) => (
-                      <label key={cat} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(cat)}
-                          onChange={() => toggleCategory(cat)}
-                        />
-                        {cat}
-                      </label>
-                    ))}
+                {/* Traits and Type */}
+                <div className="flex flex-col gap-4 md:gap-8">
+                  {/* Type */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-stone-700">Type</h3>
+                      <button
+                        className="text-stone-700 text-xl md:hidden"
+                        onClick={() => toggleSection('type')}
+                      >
+                        {filterSections.type ? '−' : '+'}
+                      </button>
+                    </div>
+                    <div className={`${filterSections.type ? 'block' : 'hidden'} md:block`}>
+                      <div className="flex flex-col gap-2 text-sm text-stone-600">
+                        {['Toy', 'Book'].map((type) => (
+                          <label key={type} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedTypes.includes(type)}
+                              onChange={() => toggleSelected(setSelectedTypes, type)}
+                            />
+                            {type}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trait */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-stone-700">Trait</h3>
+                      <button
+                        className="text-stone-700 text-xl md:hidden"
+                        onClick={() => toggleSection('trait')}
+                      >
+                        {filterSections.trait ? '−' : '+'}
+                      </button>
+                    </div>
+                    <div className={`${filterSections.trait ? 'block' : 'hidden'} md:block`}>
+                      <div className="flex flex-col gap-2 text-sm text-stone-600">
+                        {['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'].map((trait) => (
+                          <label key={trait} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedTraits.includes(trait)}
+                              onChange={() => toggleSelected(setSelectedTraits, trait)}
+                            />
+                            {trait}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Trait */}
-                <div className="flex-1">
-                  <h3 className="font-semibold text-stone-700 mb-3">Trait</h3>
-                  <div className="flex flex-col gap-2 text-sm text-stone-600">
-                    {['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'].map((trait) => (
-                      <label key={trait} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedTraits.includes(trait)}
-                          onChange={() => toggleTrait(trait)}
-                        />
-                        {trait}
-                      </label>
-                    ))}
+                {/* Brands */}
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-stone-700">Brand</h3>
+                    <button
+                      className="text-stone-700 text-xl md:hidden"
+                      onClick={() => toggleSection('brand')}
+                    >
+                      {filterSections.brand ? '−' : '+'}
+                    </button>
+                  </div>
+                  <div className={`${filterSections.brand ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
+                    <div className="flex flex-col gap-2 text-sm text-stone-600">
+                      {['MontessoriCo', 'LittleReaders', 'PlayTogether', 'CalmKids', 'TechTots', 'CreativeKids', 'LittleArtists', 'LittleWriters', 'NatureKids'].map((brand) => (
+                        <label key={brand} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedBrands.includes(brand)}
+                            onChange={() => toggleSelected(setSelectedBrands, brand)}
+                          />
+                          {brand}
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                {/* Price Range */}
-                <div className="flex-1">
-                  <h3 className="font-semibold text-stone-700 mb-3">Price Range ($)</h3>
-                  <div className="text-sm text-stone-600">
-                    <Range
-                      step={1}
-                      min={0}
-                      max={50}
-                      values={priceRange}
-                      onChange={(values) => setPriceRange(values)}
-                      renderTrack={({ props, children }) => (
-                        <div
-                          {...props}
-                          className="h-2 bg-stone-200 rounded"
-                          style={{ ...props.style }}
-                        >
-                          {children}
-                        </div>
-                      )}
-                      renderThumb={({ props }) => (
-                        <div
-                          {...props}
-                          className="h-4 w-4 rounded-full bg-stone-700 cursor-pointer"
-                        />
-                      )}
-                    />
-                    <p className="text-xs text-center mt-2">
-                      ${priceRange[0]} — ${priceRange[1]}
-                    </p>
+                {/* Categories */}
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-stone-700">Category</h3>
+                    <button
+                      className="text-stone-700 text-xl md:hidden"
+                      onClick={() => toggleSection('category')}
+                    >
+                      {filterSections.category ? '−' : '+'}
+                    </button>
+                  </div>
+                  <div className={`${filterSections.category ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
+                    <div className="flex flex-col gap-2 text-sm text-stone-600">
+                      {['Puzzle', 'Storybook', 'BoardGame', 'CalmingToy', 'Robotics', 'Storytelling', 'Planner', 'SensoryBook', 'CraftKit', 'Emotions', 'CardGame', 'Writing', 'Sorting', 'Adventure'].map((cat) => (
+                        <label key={cat} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedCategories.includes(cat)}
+                            onChange={() => toggleSelected(setSelectedCategories, cat)}
+                          />
+                          {cat}
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
+                {/* Age + Price Sliders */}
+                <div className="flex flex-col gap-4 md:gap-8">
+                  {/* Age Range */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-stone-700">Age Group (Years)</h3>
+                      <button
+                        className="text-stone-700 text-xl md:hidden"
+                        onClick={() => toggleSection('age')}
+                      >
+                        {filterSections.age ? '−' : '+'}
+                      </button>
+                    </div>
+                    <div className={`${filterSections.age ? 'block' : 'hidden'} md:block`}>
+                      <div className="text-sm text-stone-600">
+                        <Range
+                          step={1}
+                          min={0}
+                          max={16}
+                          values={ageRange}
+                          onChange={(values) => setAgeRange(values)}
+                          renderTrack={({ props, children }) => (
+                            <div {...props} className="h-2 bg-stone-200 rounded" style={{ ...props.style }}>
+                              {children}
+                            </div>
+                          )}
+                          renderThumb={({ props }) => (
+                            <div {...props} className="h-4 w-4 rounded-full bg-stone-700 cursor-pointer" />
+                          )}
+                        />
+                        <p className="text-xs text-center mt-2">{ageRange[0]} — {ageRange[1]} years</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Price Range */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-stone-700">Price Range ($)</h3>
+                      <button
+                        className="text-stone-700 text-xl md:hidden"
+                        onClick={() => toggleSection('price')}
+                      >
+                        {filterSections.price ? '−' : '+'}
+                      </button>
+                    </div>
+                    <div className={`${filterSections.price ? 'block' : 'hidden'} md:block`}>
+                      <div className="text-sm text-stone-600">
+                        <Range
+                          step={1}
+                          min={0}
+                          max={50}
+                          values={priceRange}
+                          onChange={(values) => setPriceRange(values)}
+                          renderTrack={({ props, children }) => (
+                            <div {...props} className="h-2 bg-stone-200 rounded" style={{ ...props.style }}>
+                              {children}
+                            </div>
+                          )}
+                          renderThumb={({ props }) => (
+                            <div {...props} className="h-4 w-4 rounded-full bg-stone-700 cursor-pointer" />
+                          )}
+                        />
+                        <p className="text-xs text-center mt-2">${priceRange[0]} — ${priceRange[1]}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Buttons */}

@@ -20,12 +20,12 @@ export default function CartPage() {
       </Head>
       <Header />
 
-      <main className="min-h-screen px-4 py-16 bg-[#f6ede6]">
+      <main className="pt-20 sm:pt-28 min-h-screen px-4 md:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+          <h1 className="text-3xl text-stone-600 font-bold mb-6">Your Cart</h1>
 
           {cartItems.length === 0 ? (
-            <p>Your cart is empty.</p>
+            <p className='text-stone-600'>Your cart is empty.</p>
           ) : (
             <>
               <ul className="space-y-6">

@@ -6,7 +6,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Color & Shapes Puzzle" },
     price: "$19.99",
     available: true,
-    tags: ["Conscientiousness", "Puzzle", "Toys"]
+    tags: [
+      "trait_Conscientiousness",
+      "category_Puzzle",
+      "Toy",
+      "ageGroup_2-4",
+      "brand_MontessoriCo"
+    ]
   },
   {
     id: '2',
@@ -15,7 +21,13 @@ const mockProducts = [
     image: { url: "/book_display.jpg", altText: "Adventure Storybooks" },
     price: "$24.99",
     available: true,
-    tags: ["Openness", "Reading", "Books"]
+    tags: [
+      "trait_Openness",
+      "category_Storybook",
+      "Book",
+      "ageGroup_4-6",
+      "brand_LittleReaders"
+    ]
   },
   {
     id: '3',
@@ -24,7 +36,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Group Board Game" },
     price: "$29.99",
     available: true,
-    tags: ["Extraversion", "Social", "Toys"]
+    tags: [
+      "trait_Extraversion",
+      "category_BoardGame",
+      "Game",
+      "ageGroup_6-8",
+      "brand_PlayTogether"
+    ]
   },
   {
     id: '4',
@@ -33,7 +51,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Mindfulness Toy Kit" },
     price: "$21.00",
     available: true,
-    tags: ["Neuroticism", "Calming", "Toys"]
+    tags: [
+      "trait_Neuroticism",
+      "category_CalmingToy",
+      "Toy",
+      "ageGroup_2-4",
+      "brand_CalmKids"
+    ]
   },
   {
     id: '5',
@@ -42,7 +66,13 @@ const mockProducts = [
     image: { url: "/book_display.jpg", altText: "Empathy Story Collection" },
     price: "$18.00",
     available: true,
-    tags: ["Agreeableness", "Books", "Kindness"]
+    tags: [
+      "trait_Agreeableness",
+      "category_Storybook",
+      "Book",
+      "ageGroup_4-6",
+      "brand_LittleReaders"
+    ]
   },
   {
     id: '6',
@@ -51,7 +81,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "STEM Robotics Kit" },
     price: "$39.99",
     available: true,
-    tags: ["Openness", "Creative", "Toys"]
+    tags: [
+      "trait_Openness",
+      "category_Robotics",
+      "Toy",
+      "ageGroup_8-10",
+      "brand_TechTots"
+    ]
   },
   {
     id: '7',
@@ -60,7 +96,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Story Cubes" },
     price: "$14.50",
     available: true,
-    tags: ["Openness", "Creative", "Games"]
+    tags: [
+      "trait_Openness",
+      "category_Storytelling",
+      "Game",
+      "ageGroup_6-8",
+      "brand_PlayTogether"
+    ]
   },
   {
     id: '8',
@@ -69,7 +111,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Routine Tracker" },
     price: "$15.99",
     available: true,
-    tags: ["Conscientiousness", "Organizing", "Tools"]
+    tags: [
+      "trait_Conscientiousness",
+      "category_Planner",
+      "Tool",
+      "ageGroup_2-4",
+      "brand_CalmKids"
+    ]
   },
   {
     id: '9',
@@ -78,7 +126,13 @@ const mockProducts = [
     image: { url: "/book_display.jpg", altText: "Quiet Time Book" },
     price: "$22.00",
     available: true,
-    tags: ["Neuroticism", "Sensory", "Books"]
+    tags: [
+      "trait_Neuroticism",
+      "category_SensoryBook",
+      "Book",
+      "ageGroup_2-4",
+      "brand_LittleReaders"
+    ]
   },
   {
     id: '10',
@@ -87,7 +141,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Friendship Bracelet Kit" },
     price: "$12.99",
     available: true,
-    tags: ["Agreeableness", "Crafts", "Toys"]
+    tags: [
+      "trait_Agreeableness",
+      "category_CraftKit",
+      "Toy",
+      "ageGroup_6-8",
+      "brand_CreativeKids"
+    ]
   },
   {
     id: '11',
@@ -96,7 +156,13 @@ const mockProducts = [
     image: { url: "/book_display.jpg", altText: "Emotions Coloring Book" },
     price: "$9.99",
     available: true,
-    tags: ["Neuroticism", "Emotional", "Books"]
+    tags: [
+      "trait_Neuroticism",
+      "category_Emotions",
+      "Book",
+      "ageGroup_2-4",
+      "brand_LittleArtists"
+    ]
   },
   {
     id: '12',
@@ -105,7 +171,14 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Teamwork Game" },
     price: "$17.99",
     available: true,
-    tags: ["Agreeableness", "Extraversion", "Games"]
+    tags: [
+      "trait_Agreeableness",
+      "trait_Extraversion",
+      "category_CardGame",
+      "Game",
+      "ageGroup_6-8",
+      "brand_PlayTogether"
+    ]
   },
   {
     id: '13',
@@ -114,7 +187,13 @@ const mockProducts = [
     image: { url: "/book_display.jpg", altText: "Writing Cards" },
     price: "$13.50",
     available: true,
-    tags: ["Openness", "Writing", "Books"]
+    tags: [
+      "trait_Openness",
+      "category_Writing",
+      "Book",
+      "ageGroup_8-10",
+      "brand_LittleWriters"
+    ]
   },
   {
     id: '14',
@@ -123,7 +202,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Sorting Activity Bins" },
     price: "$16.50",
     available: true,
-    tags: ["Conscientiousness", "Learning", "Toys"]
+    tags: [
+      "trait_Conscientiousness",
+      "category_Sorting",
+      "Toy",
+      "ageGroup_2-4",
+      "brand_MontessoriCo"
+    ]
   },
   {
     id: '15',
@@ -132,7 +217,13 @@ const mockProducts = [
     image: { url: "/toy_display.jpg", altText: "Explorer Set" },
     price: "$25.00",
     available: true,
-    tags: ["Openness", "Adventure", "Toys"]
+    tags: [
+      "trait_Openness",
+      "category_Adventure",
+      "Toy",
+      "ageGroup_6-8",
+      "brand_NatureKids"
+    ]
   }
 ];
 

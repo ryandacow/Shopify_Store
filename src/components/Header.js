@@ -18,7 +18,7 @@ export default function Header() {
   const [searchTerm, setSearchTerm] = React.useState('');
 
   return (
-    <header className="absolute top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm">
+    <header className="fixed top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm bg-[#f6ede6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
 
         {/* Left: Logo + Site Name */}

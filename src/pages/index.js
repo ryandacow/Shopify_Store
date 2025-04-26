@@ -94,7 +94,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="min-h-[70vh] py-20 justify-center flex bg-white px-6">
+        <section className="min-h-[70vh] py-20 justify-center flex px-6 bg-white">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center text-stone-800 mb-10">Why Shop with KidsTreasures?</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-left text-sm text-stone-700">
