@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCart } from '../context/CartContext'; // ✅ Import Cart Context
 import { MagnifyingGlassIcon, UserIcon, ShoppingCartIcon, HeartIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import mockProducts from '../data/mockProducts';
 
 export default function Header() {
   const router = useRouter();
@@ -13,10 +14,13 @@ export default function Header() {
   const isActive = (path) => router.pathname === path;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   return (
     <header className="absolute top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-        
+
         {/* Left: Logo + Site Name */}
         <Link href="/" className="flex flex-col items-center space-y-1">
           <Image
@@ -79,12 +83,15 @@ export default function Header() {
             )}
           </button>
 
-          <button className="hover:text-stone-900">
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="hover:text-stone-900"
+          >
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
-          <button className="hover:text-stone-900">
+          <Link href='/profile' className="hover:text-stone-900">
             <UserIcon className="w-5 h-5" />
-          </button>
+          </Link>
           <button className="hover:text-stone-900">
             <HeartIcon className="w-5 h-5" />
           </button>
@@ -123,6 +130,64 @@ export default function Header() {
             </nav>
           </div>
         )}
+
+        {isSearchOpen && (
+          <div className="fixed inset-0 bg-white bg-opacity-95 z-50 flex flex-col items-center px-4 pt-24 sm:pt-32">
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                setIsSearchOpen(false);
+                setSearchTerm('');
+              }}
+              className="absolute top-6 right-6 text-stone-700 hover:text-stone-900"
+            >
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="w-full max-w-md border border-stone-300 rounded-md px-4 py-2 mb-6 text-stone-800"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+            />
+
+            {/* Search Results */}
+            <div className="w-full max-w-2xl space-y-4">
+              {searchTerm.length > 0 ? (
+                mockProducts
+                  .filter((p) =>
+                    p.title.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .slice(0, 5) // Limit to 5 results
+                  .map((product) => (
+                    <Link
+                      key={product.id}
+                      href={`/shop?product=${product.id}`}
+                      className="flex items-center gap-4 p-3 bg-white rounded-md shadow hover:bg-stone-100 transition"
+                      onClick={() => setIsSearchOpen(false)}
+                    >
+                      <Image
+                        src={product.image.url}
+                        alt={product.image.altText}
+                        width={50}
+                        height={50}
+                        className="rounded object-cover"
+                      />
+                      <div className="text-stone-800 font-medium text-sm">
+                        {product.title}
+                      </div>
+                    </Link>
+                  ))
+              ) : (
+                <p className="text-stone-500 text-sm text-center">Start typing to search...</p>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </header>
   );

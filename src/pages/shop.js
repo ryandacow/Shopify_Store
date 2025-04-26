@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '../components/Header';
@@ -74,6 +74,47 @@ export default function Shop() {
     return matchesCategory && matchesTrait && matchesPrice;
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(8); // default for mobile
+
+  useEffect(() => {
+    const updateProductsPerPage = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        setProductsPerPage(16); // large screens
+      } else if (width >= 768) {
+        setProductsPerPage(12); // tablets
+      } else {
+        setProductsPerPage(8);  // phones
+      }
+    };
+
+    updateProductsPerPage(); // set on mount
+    window.addEventListener('resize', updateProductsPerPage);
+
+    return () => window.removeEventListener('resize', updateProductsPerPage);
+  }, []);
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const totalPages = Math.ceil(filtered.length / productsPerPage);
+
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [sortOption, setSortOption] = useState('Recommended');
+
+  let sortedProducts = [...filtered];
+
+  if (sortOption === 'Price: Low to High') {
+    sortedProducts.sort((a, b) => parseFloat(a.price.replace('$', '')) - parseFloat(b.price.replace('$', '')));
+  } else if (sortOption === 'Price: High to Low') {
+    sortedProducts.sort((a, b) => parseFloat(b.price.replace('$', '')) - parseFloat(a.price.replace('$', '')));
+  } else if (sortOption === 'Name (A-Z)') {
+    sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  // Then slice for pagination
+  const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
   return (
     <>
       <Head>
@@ -98,8 +139,11 @@ export default function Shop() {
             {/* Right: Filter + Sort */}
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center gap-2 px-4 py-2 border border-black bg-white rounded-md text-sm text-stone-800 hover:bg-stone-100 transition"
+                onClick={() => {
+                  setIsFilterOpen(!isFilterOpen);
+                  if (!isFilterOpen) setIsSortOpen(false); // Close Sort if opening Filter
+                }}
+                className="flex items-center gap-2 px-4 py-2 border border-black bg-white rounded-md text-sm sm:text-base text-stone-800 hover:bg-stone-100 transition"
               >
                 Filters
                 <ChevronDownIcon
@@ -108,12 +152,37 @@ export default function Shop() {
               </button>
 
               {/* Sort Dropdown */}
-              <select className="px-3 py-2 border border-stone-800 rounded-md bg-white text-sm text-stone-800">
-                <option value="recommended">Sort: Recommended</option>
-                <option value="priceLowHigh">Price: Low to High</option>
-                <option value="priceHighLow">Price: High to Low</option>
-                <option value="name">Name (A-Z)</option>
-              </select>
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setIsSortOpen(!isSortOpen);
+                    if (!isSortOpen) setIsFilterOpen(false); // Close Filter if opening Sort
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 border border-black bg-white rounded-md text-sm sm:text-base text-stone-800 hover:bg-stone-100 transition"
+                >
+                  Sort
+                  <ChevronDownIcon
+                    className={`w-4 h-4 transform transition ${isSortOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                {isSortOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-stone-300 rounded-md shadow-lg z-40">
+                    {['Recommended', 'Price: Low to High', 'Price: High to Low', 'Name (A-Z)'].map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          setSortOption(option);
+                          setIsSortOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-100"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -210,10 +279,27 @@ export default function Shop() {
 
           {/* Product Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-            {filtered.map((product) => (
+            {currentProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-10 space-x-2">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`px-3 py-1 rounded ${currentPage === index + 1
+                    ? 'bg-stone-800 text-white'
+                    : 'bg-white border border-stone-300 text-stone-700 hover:bg-stone-100'
+                    }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* No Products Message */}
           {filtered.length === 0 && (
