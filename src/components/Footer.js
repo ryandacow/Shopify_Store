@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import { EnvelopeIcon, PhoneIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
-
-
+import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="text-stone-700 border-t border-stone-300">
       <div className="max-w-7xl mx-auto px-6 pl-10 py-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-        {/* Shop Links */}
+        {/* Navigation Links */}
         <div>
           <h3 className="font-semibold mb-3">Navigation</h3>
           <ul className="space-y-2">
@@ -29,13 +28,13 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact & Connect */}
+        {/* Contact & Social */}
         <div>
           <h3 className="font-semibold mb-3">Get in Touch</h3>
           <ul className="space-y-3 text-sm text-stone-700">
             <li className="flex items-start gap-2">
               <MapPinIcon className="h-5 w-5 text-stone-900 mt-0.5" />
-              <a href="/contact" className="hover:underline">Contact Page</a>
+              <Link href="/contact" className="hover:underline">Contact Page</Link>
             </li>
             <li className="flex items-start gap-2">
               <EnvelopeIcon className="h-5 w-5 text-stone-900 mt-0.5" />
@@ -61,8 +60,19 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className = 'flex justify-center py-6 text-sm text-stone-500'>
-          © {new Date().getFullYear()} AmazingStoreSG. All rights reserved.
+
+      {/* Bottom Row */}
+      <div className="max-w-7xl mx-auto px-6 pl-10 py-6 flex flex-col sm:flex-row justify-between items-center text-sm text-stone-500 gap-4">
+        <p>© {new Date().getFullYear()} AmazingStoreSG. All rights reserved.</p>
+        <div className="flex items-center gap-2">
+          <Image src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" width={32} height={20} />
+          <Image src="https://img.icons8.com/color/48/000000/mastercard-logo.png" alt="MasterCard" width={32} height={20} />
+          <Image src="https://img.icons8.com/ios-filled/50/000000/paypal.png" alt="PayPal" width={32} height={20} />
+          <Image src="/icons/apple-pay.svg" alt="Apple Pay" width={32} height={20} />
+          <Image src="/icons/google-pay.svg" alt="Google Pay" width={32} height={20} />
+          <Image src="/icons/grabpay.svg" alt="GrabPay" width={32} height={20} />
+          <Image src="/icons/paynow.svg" alt="PayNow" width={32} height={20} />
+        </div>
       </div>
     </footer>
   );

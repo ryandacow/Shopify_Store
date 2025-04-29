@@ -41,7 +41,7 @@ export default function Header() {
           {[
             { href: '/', label: 'Home' },
             { href: '/shop', label: 'Shop' },
-            { href: '/about', label: 'About' },
+            { href: '/about-contact', label: 'About' },
             { href: '/contact', label: 'Contact' },
             { href: '/personality', label: 'Personalize' },
           ].map(({ href, label }) => (
