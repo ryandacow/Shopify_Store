@@ -13,7 +13,7 @@ export default function Shop() {
   const { trait } = query;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const [selectedTypes, setSelectedTypes] = useState([]); // Toy / Book
+  const [selectedSpecials, setSelectedSpecials] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedTraits, setSelectedTraits] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -21,7 +21,7 @@ export default function Shop() {
   const [ageRange, setAgeRange] = useState([0, 16]); // Assuming ages 0-10
 
   const [filterSections, setFilterSections] = useState({
-    type: false,
+    special: false,
     trait: false,
     brand: false,
     category: false,
@@ -37,7 +37,7 @@ export default function Shop() {
   };
 
   const [appliedFilters, setAppliedFilters] = useState({
-    types: [],
+    specials: [],
     categories: [],
     traits: [],
     brands: [],
@@ -53,14 +53,17 @@ export default function Shop() {
   };
 
   const resetFilters = () => {
+    setSelectedSpecials([]);
     setSelectedCategories([]);
     setSelectedTraits([]);
+    setSelectedBrands([]);
     setPriceRange([0, 50]);
+    setAgeRange([0, 16]);
   };
 
   const applyFilters = () => {
     setAppliedFilters({
-      types: selectedTypes,
+      specials: selectedSpecials,
       categories: selectedCategories,
       traits: selectedTraits,
       brands: selectedBrands,
@@ -73,33 +76,33 @@ export default function Shop() {
 
   const filtered = mockProducts.filter((product) => {
     const productTags = product.tags;
-  
-    const matchesType =
-      !appliedFilters.types || appliedFilters.types.length === 0 ||
-      appliedFilters.types.some((type) => productTags.includes(type));
-  
+
+    const matchesSpecial =
+      !appliedFilters.specials || appliedFilters.specials.length === 0 ||
+      appliedFilters.specials.some((special) => productTags.includes(special));
+
     const matchesCategory =
       !appliedFilters.categories || appliedFilters.categories.length === 0 ||
       appliedFilters.categories.some((cat) => productTags.includes(`category_${cat}`));
-  
+
     const matchesTrait =
       !appliedFilters.traits || appliedFilters.traits.length === 0 ||
       appliedFilters.traits.some((trait) => productTags.includes(`trait_${trait}`));
-  
+
     const matchesBrand =
       !appliedFilters.brands || appliedFilters.brands.length === 0 ||
       appliedFilters.brands.some((brand) => productTags.includes(`brand_${brand}`));
-  
+
     const matchesPrice =
       parseFloat(product.price.replace('$', '')) >= (appliedFilters.priceRange?.[0] ?? 0) &&
       parseFloat(product.price.replace('$', '')) <= (appliedFilters.priceRange?.[1] ?? 50);
-  
+
     const ageTag = productTags.find(tag => tag.startsWith('ageGroup_'));
     const productAge = ageTag ? parseInt(ageTag.split('_')[1].split('-')[0]) : null;
     const matchesAge =
       !productAge || (productAge >= (appliedFilters.ageRange?.[0] ?? 0) && productAge <= (appliedFilters.ageRange?.[1] ?? 16));
-  
-    return matchesType && matchesCategory && matchesTrait && matchesBrand && matchesPrice && matchesAge;
+
+    return matchesSpecial && matchesCategory && matchesTrait && matchesBrand && matchesPrice && matchesAge;
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -155,17 +158,37 @@ export default function Shop() {
           {/* Title */}
           <div className="mb-8 text-center">
             <h1 className="text-xl sm:text-3xl font-bold text-stone-800">
-              {appliedFilters.categories.length > 0
-                ? appliedFilters.categories.join(', ')
-                : 'All Products'}
+              Catalogue
             </h1>
           </div>
 
           {/* Top Controls */}
           <div className="relative flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-            {/* Left: Category Path */}
+            {/* Left: Category Path + Filters */}
             <div className="text-stone-700 text-sm font-medium">
-              All Products {appliedFilters.categories.length > 0 && ` > ${appliedFilters.categories.join(' > ')}`}
+              <div className="text-center sm:text-left mb-2">
+                All Products
+                {appliedFilters.categories.length > 0 && ` > ${appliedFilters.categories.join(' | ')}`}
+              </div>
+
+              {/* Applied Filters Summary */}
+              <div className="flex flex-wrap justify-center sm:justify-start gap-2 text-xs text-stone-600">
+                {appliedFilters.specials.map((s) => (
+                  <span key={s} className="bg-stone-100 px-2 py-1 rounded-full">{s === 'Featured' ? 'Best Sellers' : 'Promotion'}</span>
+                ))}
+                {appliedFilters.traits.map((t) => (
+                  <span key={t} className="bg-stone-100 px-2 py-1 rounded-full">{t}</span>
+                ))}
+                {appliedFilters.brands.map((b) => (
+                  <span key={b} className="bg-stone-100 px-2 py-1 rounded-full">{b}</span>
+                ))}
+                {appliedFilters.ageRange[0] > 0 || appliedFilters.ageRange[1] < 16 ? (
+                  <span className="bg-stone-100 px-2 py-1 rounded-full">Age {appliedFilters.ageRange[0]}–{appliedFilters.ageRange[1]}</span>
+                ) : null}
+                {appliedFilters.priceRange[0] > 0 || appliedFilters.priceRange[1] < 50 ? (
+                  <span className="bg-stone-100 px-2 py-1 rounded-full">${appliedFilters.priceRange[0]}–{appliedFilters.priceRange[1]}</span>
+                ) : null}
+              </div>
             </div>
 
             {/* Right: Filter + Sort */}
@@ -225,27 +248,28 @@ export default function Shop() {
 
                 {/* Traits and Type */}
                 <div className="flex flex-col gap-4 md:gap-8">
-                  {/* Type */}
+
+                  {/* Special (Featured or Sale) */}
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-stone-700">Type</h3>
+                      <h3 className="font-semibold text-stone-700">Highlights</h3>
                       <button
                         className="text-stone-700 text-xl md:hidden"
-                        onClick={() => toggleSection('type')}
+                        onClick={() => toggleSection('special')}
                       >
-                        {filterSections.type ? '−' : '+'}
+                        {filterSections.special ? '−' : '+'}
                       </button>
                     </div>
-                    <div className={`${filterSections.type ? 'block' : 'hidden'} md:block`}>
+                    <div className={`${filterSections.special ? 'block' : 'hidden'} md:block`}>
                       <div className="flex flex-col gap-2 text-sm text-stone-600">
-                        {['Toy', 'Book'].map((type) => (
-                          <label key={type} className="flex items-center gap-2">
+                        {['Featured', 'Sale'].map((special) => (
+                          <label key={special} className="flex items-center gap-2">
                             <input
                               type="checkbox"
-                              checked={selectedTypes.includes(type)}
-                              onChange={() => toggleSelected(setSelectedTypes, type)}
+                              checked={selectedSpecials.includes(special)}
+                              onChange={() => toggleSelected(setSelectedSpecials, special)}
                             />
-                            {type}
+                            {special === 'Featured' ? 'Best Sellers' : 'Promotion'}
                           </label>
                         ))}
                       </div>

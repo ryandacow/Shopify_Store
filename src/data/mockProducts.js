@@ -199,7 +199,6 @@ const mockProducts = [
     tags: [
       "trait_Openness",
       "category_Writing",
-      "Book",
       "ageGroup_8-10",
       "brand_LittleWriters"
     ]
@@ -214,7 +213,6 @@ const mockProducts = [
     tags: [
       "trait_Conscientiousness",
       "category_Sorting",
-      "Toy",
       "ageGroup_2-4",
       "brand_MontessoriCo",
       "Featured"
@@ -230,7 +228,6 @@ const mockProducts = [
     tags: [
       "trait_Openness",
       "category_Adventure",
-      "Toy",
       "ageGroup_6-8",
       "brand_NatureKids",
       "Trending",
