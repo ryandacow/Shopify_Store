@@ -46,7 +46,16 @@ export default function PersonalityInput() {
     try {
       const data = await fetchOceanTraits(inputText);
       const topTrait = data.predicted_traits?.[0];
-      setResult(traitInfo[topTrait]);
+
+      if (topTrait && traitInfo[topTrait]) {
+        setResult(traitInfo[topTrait]);
+      } else {
+        setResult({
+          label: null,
+          interpretation: null,
+          suggestions: null
+        });
+      }
 
     } catch (error) {
       console.error('Error analyzing text:', error);
@@ -97,25 +106,37 @@ export default function PersonalityInput() {
 
           {result && (
             <div className="mt-12 bg-white rounded-xl shadow-md p-6 text-left text-stone-800">
-              <h2 className="text-xl font-semibold mb-2">Dominant Trait: {result.label}</h2>
-              <p className="mb-2"><span className="font-medium">Interpretation:</span> {result.interpretation}</p>
-              <p><span className="font-medium">Gift Ideas:</span> {result.suggestions}</p>
+              {result.label ? (
+                <>
+                  <h2 className="text-xl font-semibold mb-2">Dominant Trait: {result.label}</h2>
+                  <p className="mb-2"><span className="font-medium">Interpretation:</span> {result.interpretation}</p>
+                  <p><span className="font-medium">Gift Ideas:</span> {result.suggestions}</p>
 
-              <p className="text-center text-stone-600 mt-6 italic">
-                Based on what you shared, we’ve picked out items that match your child’s personality.
-              </p>
-              <p className="text-center text-stone-700 font-medium">
-                Explore handpicked toys and books tailored just for them 🎁
-              </p>
+                  <p className="text-center text-stone-600 mt-6 italic">
+                    Based on what you shared, we’ve picked out items that match your child’s personality.
+                  </p>
+                  <p className="text-center text-stone-700 font-medium">
+                    Explore handpicked toys and books tailored just for them 🎁
+                  </p>
 
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={() => router.push(`/shop?trait=${encodeURIComponent(result.label)}`)}
-                  className="bg-stone-800 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition"
-                >
-                  Continue to Shop
-                </button>
-              </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => router.push(`/shop?trait=${encodeURIComponent(result.label)}`)}
+                      className="bg-stone-800 text-white px-6 py-3 rounded-lg hover:bg-stone-700 transition"
+                    >
+                      Continue to Shop
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center">
+                  <h2 className="text-xl font-semibold mb-4 text-red-700">Hmm... we couldn&apos;t detect a clear trait.</h2>
+                  <p className="text-stone-700 mb-4">
+                    Try being more specific or descriptive. For example, mention how your child plays, behaves around others, or what excites them most.
+                  </p>
+                  <p className="text-stone-600 italic">E.g., “My child is always curious, asks lots of questions, and loves painting and drawing.”</p>
+                </div>
+              )}
             </div>
           )}
         </div>
