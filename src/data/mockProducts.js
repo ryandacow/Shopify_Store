@@ -11,7 +11,9 @@ const mockProducts = [
       "category_Puzzle",
       "Toy",
       "ageGroup_2-4",
-      "brand_MontessoriCo"
+      "brand_MontessoriCo",
+      "Trending",
+      "Featured"
     ]
   },
   {
@@ -26,7 +28,8 @@ const mockProducts = [
       "category_Storybook",
       "Book",
       "ageGroup_4-6",
-      "brand_LittleReaders"
+      "brand_LittleReaders",
+      "Featured"
     ]
   },
   {
@@ -41,7 +44,8 @@ const mockProducts = [
       "category_BoardGame",
       "Game",
       "ageGroup_6-8",
-      "brand_PlayTogether"
+      "brand_PlayTogether",
+      "Sale"
     ]
   },
   {
@@ -56,7 +60,8 @@ const mockProducts = [
       "category_CalmingToy",
       "Toy",
       "ageGroup_2-4",
-      "brand_CalmKids"
+      "brand_CalmKids",
+      "Sale"
     ]
   },
   {
@@ -86,7 +91,9 @@ const mockProducts = [
       "category_Robotics",
       "Toy",
       "ageGroup_8-10",
-      "brand_TechTots"
+      "brand_TechTots",
+      "Trending",
+      "Featured"
     ]
   },
   {
@@ -146,7 +153,8 @@ const mockProducts = [
       "category_CraftKit",
       "Toy",
       "ageGroup_6-8",
-      "brand_CreativeKids"
+      "brand_CreativeKids",
+      "Sale"
     ]
   },
   {
@@ -177,7 +185,8 @@ const mockProducts = [
       "category_CardGame",
       "Game",
       "ageGroup_6-8",
-      "brand_PlayTogether"
+      "brand_PlayTogether",
+      "Featured"
     ]
   },
   {
@@ -207,7 +216,8 @@ const mockProducts = [
       "category_Sorting",
       "Toy",
       "ageGroup_2-4",
-      "brand_MontessoriCo"
+      "brand_MontessoriCo",
+      "Featured"
     ]
   },
   {
@@ -222,7 +232,9 @@ const mockProducts = [
       "category_Adventure",
       "Toy",
       "ageGroup_6-8",
-      "brand_NatureKids"
+      "brand_NatureKids",
+      "Trending",
+      "Sale"
     ]
   }
 ];

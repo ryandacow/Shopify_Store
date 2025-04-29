@@ -17,6 +17,8 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
 
+  const [debouncedTerm, setDebouncedTerm] = React.useState('');
+
   const highlightMatch = (text, query) => {
     if (!query) return text;
 
@@ -50,6 +52,14 @@ export default function Header() {
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSearchOpen]);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedTerm(searchTerm);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(handler); // cleanup on input change
+  }, [searchTerm]);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm bg-[#f6ede6]">
@@ -206,7 +216,7 @@ export default function Header() {
               {searchTerm.length > 0 ? (() => {
                 const filtered = mockProducts
                   .filter((p) =>
-                    p.title.toLowerCase().includes(searchTerm.toLowerCase())
+                    p.title.toLowerCase().includes(debouncedTerm.toLowerCase())
                   )
                   .slice(0, 5);
 
@@ -231,7 +241,7 @@ export default function Header() {
                       className="rounded object-cover w-[50px] h-[50px]"
                     />
                     <div className="text-stone-800 font-medium text-sm">
-                      {highlightMatch(product.title, searchTerm)}
+                      {highlightMatch(product.title, debouncedTerm)}
                     </div>
                   </Link>
                 ));

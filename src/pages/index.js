@@ -1,10 +1,16 @@
 import Head from 'next/head';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import SectionCarousel from '../components/SectionCarousel';
+import mockProducts from '../data/mockProducts';
 
 export default function Home() {
+  // Filter products based on tags
+  const featuredProducts = mockProducts.filter((p) => p.tags.includes('Featured'));
+  const saleProducts = mockProducts.filter((p) => p.tags.includes('Sale'));
+
   return (
     <>
       <Head>
@@ -37,16 +43,26 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="min-h-screen py-20 bg-[#fdfaf6]">
+        <section className="min-h-screen pt-20 bg-[#fbf7f3]">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-stone-800 mb-6">
+            Start Exploring
+          </h2>
+
+          <p className="text-center text-stone-600 mb-10">
+            Shop handpicked <span className="font-medium text-stone-900">toys</span> and <span className="font-medium text-stone-900">books</span> selected to match your child&rsquo;s needs, interests, and personality.
+          </p>
+
+          <div className="max-w-6xl mx-auto px-4 pb-10">
+            <SectionCarousel title="Best Sellers" products={featuredProducts} />
+            <SectionCarousel title="Hot Deals" products={saleProducts} />
+          </div>
+        </section>
+
+        <section className="min-h-screen pt-20 bg-[#fbf7f3]">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-center text-2xl sm:text-3xl font-bold text-stone-800 mb-10">
-              Start Exploring
+              Catalogue
             </h2>
-
-            <p className="text-center text-stone-600 mb-10">
-              Shop handpicked <span className="font-medium text-stone-900">toys</span> and <span className="font-medium text-stone-900">books</span> selected to match your child&rsquo;s needs, interests, and personality.
-            </p>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Toys */}
               <Link
