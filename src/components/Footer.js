@@ -67,11 +67,11 @@ export default function Footer() {
         <div className="flex items-center gap-2">
           <Image src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" width={32} height={20} />
           <Image src="https://img.icons8.com/color/48/000000/mastercard-logo.png" alt="MasterCard" width={32} height={20} />
-          <Image src="https://img.icons8.com/ios-filled/50/000000/paypal.png" alt="PayPal" width={32} height={20} />
-          <Image src="/icons/apple-pay.svg" alt="Apple Pay" width={32} height={20} />
-          <Image src="/icons/google-pay.svg" alt="Google Pay" width={32} height={20} />
-          <Image src="/icons/grabpay.svg" alt="GrabPay" width={32} height={20} />
-          <Image src="/icons/paynow.svg" alt="PayNow" width={32} height={20} />
+          <Image src="/payment_icons/paypal.svg" alt="PayPal" width={40} height={24} />
+          <Image src="/payment_icons/applepay.svg" alt="Apple Pay" width={40} height={24} />
+          <Image src="/payment_icons/googlepay.svg" alt="Google Pay" width={40} height={24} />
+          <Image src="/payment_icons/grabpay.svg" alt="GrabPay" width={40} height={24} />
+          <Image src="/payment_icons/paynow.svg" alt="PayNow" width={40} height={24} />
         </div>
       </div>
     </footer>

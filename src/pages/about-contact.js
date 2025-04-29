@@ -22,7 +22,7 @@ export default function AboutContactPage() {
               We carefully curate every product with love and a focus on personal development.
             </p>
             <p className="text-stone-600 leading-relaxed">
-              Whether you're looking for creativity boosters, calming toys, or early learning kits — we've got you covered!
+              Whether you&rsquo;re looking for creativity boosters, calming toys, or early learning kits — we&rsquo;ve got you covered!
               Thank you for being a part of our journey.
             </p>
           </section>

@@ -17,15 +17,49 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
 
+  const highlightMatch = (text, query) => {
+    if (!query) return text;
+
+    const regex = new RegExp(`(${query})`, 'i');
+    const parts = text.split(regex);
+
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <span key={i} className="bg-amber-200 rounded">
+          {part}
+        </span>
+      ) : (
+        <React.Fragment key={i}>{part}</React.Fragment>
+      )
+    );
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsSearchOpen(false);
+        setSearchTerm('');
+      }
+    };
+
+    if (isSearchOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      window.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchOpen]);
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 border-b border-stone-300 shadow-sm bg-[#f6ede6]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 grid grid-cols-3 items-center">
 
         {/* Left: Logo + Site Name */}
-        <Link href="/" className="flex flex-col items-center space-y-1">
+        <Link href="/" className="flex flex-col items-center space-y-1 justify-self-start">
           <Image
             src="/favicon.ico"
-            alt="KidsTreasures Logo"
+            alt="AmazingStoreSG Logo"
             href='/'
             width={40}
             height={40}
@@ -37,12 +71,11 @@ export default function Header() {
         </Link>
 
         {/* Center: Navigation */}
-        <nav className="hidden md:flex space-x-10 text-sm font-medium text-stone-700">
+        <nav className="hidden md:flex justify-center space-x-10 text-sm font-medium text-stone-700">
           {[
             { href: '/', label: 'Home' },
             { href: '/shop', label: 'Shop' },
-            { href: '/about-contact', label: 'About' },
-            { href: '/contact', label: 'Contact' },
+            { href: '/about-contact', label: 'Contact Us' },
             { href: '/personality', label: 'Personalize' },
           ].map(({ href, label }) => (
             <Link
@@ -70,7 +103,7 @@ export default function Header() {
         </nav>
 
         {/* Right: Icons */}
-        <div className="flex items-center space-x-6 text-stone-700">
+        <div className="flex justify-end items-center space-x-6 text-stone-700">
           {/* Mobile Menu Button */}
           <button
             className="md:hidden hover:text-stone-900"
@@ -84,20 +117,34 @@ export default function Header() {
           </button>
 
           <button
+            aria-label='Search'
             onClick={() => setIsSearchOpen(true)}
             className="hover:text-stone-900"
           >
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
-          <Link href='/profile' className="hover:text-stone-900">
+
+          <Link
+            aria-label='Manage Profile'
+            href='/profile'
+            className="hover:text-stone-900"
+          >
             <UserIcon className="w-5 h-5" />
           </Link>
-          <button className="hover:text-stone-900">
+
+          <button
+            aria-label='Favourites'
+            className="hover:text-stone-900"
+          >
             <HeartIcon className="w-5 h-5" />
           </button>
 
           {/* Cart Icon */}
-          <Link href="/cart" className="hover:text-stone-900 relative">
+          <Link
+            aria-label='Shopping Cart'
+            href="/cart"
+            className="hover:text-stone-900 relative"
+          >
             <ShoppingCartIcon className="w-5 h-5" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-stone-700 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
@@ -114,8 +161,7 @@ export default function Header() {
               {[
                 { href: '/', label: 'Home' },
                 { href: '/shop', label: 'Shop' },
-                { href: '/about', label: 'About' },
-                { href: '/contact', label: 'Contact' },
+                { href: '/about-contact', label: 'Contact Us' },
                 { href: '/personality', label: 'Personalize' },
               ].map(({ href, label }) => (
                 <Link
@@ -135,6 +181,7 @@ export default function Header() {
           <div className="fixed inset-0 bg-white bg-opacity-95 z-50 flex flex-col items-center px-4 pt-24 sm:pt-32">
             {/* Close Button */}
             <button
+              aria-label='Close Search Menu'
               onClick={() => {
                 setIsSearchOpen(false);
                 setSearchTerm('');
@@ -146,6 +193,7 @@ export default function Header() {
 
             {/* Search Input */}
             <input
+              aria-label='Input to Search Products'
               type="text"
               placeholder="Search products..."
               className="w-full max-w-md border border-stone-300 rounded-md px-4 py-2 mb-6 text-stone-800"
@@ -154,34 +202,40 @@ export default function Header() {
               autoFocus
             />
 
-            {/* Search Results */}
             <div className="w-full max-w-2xl space-y-4">
-              {searchTerm.length > 0 ? (
-                mockProducts
+              {searchTerm.length > 0 ? (() => {
+                const filtered = mockProducts
                   .filter((p) =>
                     p.title.toLowerCase().includes(searchTerm.toLowerCase())
                   )
-                  .slice(0, 5) // Limit to 5 results
-                  .map((product) => (
-                    <Link
-                      key={product.id}
-                      href={`/shop?product=${product.id}`}
-                      className="flex items-center gap-4 p-3 bg-white rounded-md shadow hover:bg-stone-100 transition"
-                      onClick={() => setIsSearchOpen(false)}
-                    >
-                      <Image
-                        src={product.image.url}
-                        alt={product.image.altText}
-                        width={50}
-                        height={50}
-                        className="rounded object-cover"
-                      />
-                      <div className="text-stone-800 font-medium text-sm">
-                        {product.title}
-                      </div>
-                    </Link>
-                  ))
-              ) : (
+                  .slice(0, 5);
+
+                if (filtered.length === 0) {
+                  return (
+                    <p className="text-stone-500 text-sm text-center">No products found for “{searchTerm}”.</p>
+                  );
+                }
+
+                return filtered.map((product) => (
+                  <Link
+                    key={product.id}
+                    href={`/product/${product.id}`}
+                    className="flex items-center gap-4 p-3 bg-white rounded-md shadow hover:bg-stone-100 transition"
+                    onClick={() => setIsSearchOpen(false)}
+                  >
+                    <Image
+                      src={product.image.url}
+                      alt={product.image.altText}
+                      width={50}
+                      height={50}
+                      className="rounded object-cover w-[50px] h-[50px]"
+                    />
+                    <div className="text-stone-800 font-medium text-sm">
+                      {highlightMatch(product.title, searchTerm)}
+                    </div>
+                  </Link>
+                ));
+              })() : (
                 <p className="text-stone-500 text-sm text-center">Start typing to search...</p>
               )}
             </div>
