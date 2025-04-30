@@ -4,13 +4,21 @@ import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SectionCarousel from '../components/SectionCarousel';
+import LinkTileCarousel from '../components/LinkTileCarousel';
 import mockProducts from '../data/mockProducts';
+import { extractTags } from '@/lib/extractTags';
 
 export default function Home() {
   // Filter products based on tags
   const featuredProducts = mockProducts.filter((p) => p.tags.includes('Featured'));
   const saleProducts = mockProducts.filter((p) => p.tags.includes('Sale'));
 
+  const { brands: hotBrands, categories: hotCategories } = extractTags(mockProducts);
+
+
+  console.log('Brands:', hotBrands);
+  console.log('Categories:', hotCategories);
+  
   return (
     <>
       <Head>
@@ -55,58 +63,8 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-4 pb-10">
             <SectionCarousel title="Best Sellers" products={featuredProducts} />
             <SectionCarousel title="Hot Deals" products={saleProducts} />
-          </div>
-        </section>
-
-        <section className="min-h-screen pt-20 bg-[#fbf7f3]">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-center text-2xl sm:text-3xl font-bold text-stone-800 mb-10">
-              Catalogue
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Toys */}
-              <Link
-                href="/shop?category=Toys"
-                className="group relative block aspect-[4/3] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition"
-              >
-                <div className="relative w-full h-full">
-                  <Image
-                    src="/toy_display.jpg"
-                    alt="Toys"
-                    fill
-                    className="object-cover"
-                    style={{ zIndex: 0 }}
-                  />
-                  {/* Either blur the background with backdrop-blur-sm or add a translucent black */}
-                  <div className="absolute inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center">
-                    <h3 className="text-white text-2xl font-semibold tracking-wide group-hover:underline">
-                      🧸 Toys
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-
-              {/* Books */}
-              <Link
-                href="/shop?category=Books"
-                className="group relative block aspect-[4/3] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition"
-              >
-                <div className="relative w-full h-full">
-                  <Image
-                    src="/book_display.jpg"
-                    alt="Toys"
-                    fill
-                    className="object-cover"
-                    style={{ zIndex: 0 }}
-                  />
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center">
-                    <h3 className="text-white text-2xl font-semibold tracking-wide group-hover:underline">
-                      📚 Books
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-            </div>
+            <LinkTileCarousel title="🔥 Hot Brands" items={hotBrands} type="brand" />
+            <LinkTileCarousel title="🧠 Categories You Might Be Interested In" items={hotCategories} type="category" />
           </div>
         </section>
 

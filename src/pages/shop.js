@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Range } from 'react-range';
+
 import Head from 'next/head';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+
 import mockProducts from '../data/mockProducts';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Range } from 'react-range';
+import { extractTags } from '@/lib/extractTags';
 
 export default function Shop() {
-  const { query } = useRouter();
-  const { trait } = query;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [selectedSpecials, setSelectedSpecials] = useState([]);
@@ -19,6 +20,26 @@ export default function Shop() {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 50]);
   const [ageRange, setAgeRange] = useState([0, 16]); // Assuming ages 0-10
+
+  const router = useRouter();
+  const { trait, brand, category } = router.query;
+
+  useEffect(() => {
+    if (trait || brand || category) {
+      if (trait) setSelectedTraits([trait]);
+      if (brand) setSelectedBrands([brand]);
+      if (category) setSelectedCategories([category]);
+
+      setAppliedFilters((prev) => ({
+        ...prev,
+        traits: trait ? [trait] : [],
+        brands: brand ? [brand] : [],
+        categories: category ? [category] : [],
+      }));
+    }
+  }, [trait, brand, category]);
+
+  const { categories: availableCategories, brands: availableBrands } = extractTags(mockProducts);
 
   const [filterSections, setFilterSections] = useState({
     special: false,
@@ -317,14 +338,14 @@ export default function Shop() {
                   </div>
                   <div className={`${filterSections.brand ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
                     <div className="flex flex-col gap-2 text-sm text-stone-600">
-                      {['MontessoriCo', 'LittleReaders', 'PlayTogether', 'CalmKids', 'TechTots', 'CreativeKids', 'LittleArtists', 'LittleWriters', 'NatureKids'].map((brand) => (
+                      {availableBrands.map((brand) => (
                         <label key={brand} className="flex items-center gap-2">
                           <input
                             type="checkbox"
                             checked={selectedBrands.includes(brand)}
                             onChange={() => toggleSelected(setSelectedBrands, brand)}
                           />
-                          {brand}
+                          {brand.name}
                         </label>
                       ))}
                     </div>
@@ -344,14 +365,14 @@ export default function Shop() {
                   </div>
                   <div className={`${filterSections.category ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
                     <div className="flex flex-col gap-2 text-sm text-stone-600">
-                      {['Puzzle', 'Storybook', 'BoardGame', 'CalmingToy', 'Robotics', 'Storytelling', 'Planner', 'SensoryBook', 'CraftKit', 'Emotions', 'CardGame', 'Writing', 'Sorting', 'Adventure'].map((cat) => (
+                      {availableCategories.map((cat) => (
                         <label key={cat} className="flex items-center gap-2">
                           <input
                             type="checkbox"
                             checked={selectedCategories.includes(cat)}
                             onChange={() => toggleSelected(setSelectedCategories, cat)}
                           />
-                          {cat}
+                          {cat.name}
                         </label>
                       ))}
                     </div>
