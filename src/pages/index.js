@@ -18,7 +18,7 @@ export default function Home() {
 
   console.log('Brands:', hotBrands);
   console.log('Categories:', hotCategories);
-  
+
   return (
     <>
       <Head>
@@ -30,9 +30,30 @@ export default function Home() {
 
       <main>
         <section
-          className="min-h-screen px-4 flex items-center justify-center"
+          className="min-h-screen px-4 flex items-center justify-center bg-cover bg-center bg-[#fbf7f3]"
+          style={{
+            backgroundImage: "url('/header.png')", // Replace with the actual path to your image
+            backgroundSize: "cover", // Ensures the image covers the entire section
+            backgroundPosition: "center", // Centers the image
+            height: "100vh", // Ensures the section takes up the full viewport height
+            paddingBottom: 0,
+            marginBottom: 0
+          }}
         >
-          <div className="max-w-3xl text-center">
+          {/* <div className="max-w-3xl text-center bg-opacity-80 p-6 rounded-lg" style={{
+            marginBottom: 0 }}> */}
+          <div
+            className="absolute inset-0 bg-white opacity-35"
+            style={{
+              zIndex: 1, // Ensure the overlay is behind the content
+            }}
+          ></div>
+          <div
+            className="relative max-w-3xl text-center bg-opacity-80 p-6 rounded-lg"
+            style={{
+              zIndex: 2, // Ensure the content is above the overlay
+            }}
+          >
             <h1 className="text-3xl sm:text-5xl font-bold text-stone-800 mb-6 leading-snug">
               Discover the Perfect Gift<br />for Your Child&rsquo;s Personality
             </h1>
