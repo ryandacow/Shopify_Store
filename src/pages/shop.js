@@ -339,11 +339,11 @@ export default function Shop() {
                   <div className={`${filterSections.brand ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
                     <div className="flex flex-col gap-2 text-sm text-stone-600">
                       {availableBrands.map((brand) => (
-                        <label key={brand} className="flex items-center gap-2">
+                        <label key={brand.slug} className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            checked={selectedBrands.includes(brand)}
-                            onChange={() => toggleSelected(setSelectedBrands, brand)}
+                            checked={selectedBrands.includes(brand.slug)}
+                            onChange={() => toggleSelected(setSelectedBrands, brand.slug)}
                           />
                           {brand.name}
                         </label>
@@ -366,11 +366,11 @@ export default function Shop() {
                   <div className={`${filterSections.category ? 'block' : 'hidden'} md:block overflow-y-auto max-h-48 pr-2`}>
                     <div className="flex flex-col gap-2 text-sm text-stone-600">
                       {availableCategories.map((cat) => (
-                        <label key={cat} className="flex items-center gap-2">
+                        <label key={cat.slug} className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            checked={selectedCategories.includes(cat)}
-                            onChange={() => toggleSelected(setSelectedCategories, cat)}
+                            checked={selectedCategories.includes(cat.slug)}
+                            onChange={() => toggleSelected(setSelectedCategories, cat.slug)}
                           />
                           {cat.name}
                         </label>
